@@ -1,0 +1,28 @@
+{
+  "name": "emp-track",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gsimon5841/emp-track.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gsimon5841/emp-track/issues"
+  },
+  "homepage": "https://github.com/Gsimon5841/emp-track#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "inquirer": "^8.2.2",
+    "jest": "^27.5.1",
+    "mysql2": "^2.3.3"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
