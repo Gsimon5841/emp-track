@@ -1,26 +1,82 @@
 const db = require('./db/connection');
-const express = require('express');
-const PORT = process.env.PORT || 3002;
-const app = express();
-const { query } = require('express');
-const verification = require('./utils/verification');
-const apiRoutes = require('./routes/apiRoutes');
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use('/api', apiRoutes);
+require('console.table');
+const inquirer = require('inquirer');
+const { response } = require('express');
+const req = require('express/lib/request');
+const { type } = require('express/lib/response');
 
 
+function init() {
+  inquirer
+  .prompt({
+    type: 'list',
+    name: 'choice',
+    message: ' what would you like to do?',
+    choices: ['View all employees', 'Add Employee', 'Update Employee Role', 'Add Role','View All Departments', 'Add Department']
 
 
+  })
+  .then((response) => {
+    switch(response.choice) {
+      case 'View all employees':
+        viewAllEmployees();
 
+        break;
 
+      case  'Add Employee':
+        addEmployee();
+        break;
+    }
+  }) 
+}
+function viewAllEmployees() {
+  const sql = `SELECT employee.*, role.title, role.salary
+  AS role
+  FROM employee 
+  LEFT JOIN role 
+  ON employee.role_id = role.id`;
 
-  app.use((req, res) => {
-    res.status(404).end();
+  db.query(sql, (err, rows) => {
+    
+    console.table(rows)
   });
+
+  init()
+}
+function addEmployee() {
+
+  inquirer.prompt([
+      {
+        name: "first",
+        message: "What is the employee's first name",
+        type: "input",
+      },
+      {
+        name: "last",
+        message: "What is the employee's last name",
+        type: "input",
+      },
+      {
+        name: "role",
+        message: "What's is the employee's role id",
+       type: "input"
+      },
+      {
+        name: "department",
+        message: "What is the employee's department id",
+        type: "input"
+      }
+    ])
+    .then((body)=> {
+      const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+  VALUES (?,?,?,?)`;
+
+  db.query(sql, (err, result) => {
+    
+      console.table(result)
+    }); 
   
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+});
+
+}
+init()
